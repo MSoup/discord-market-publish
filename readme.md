@@ -1,6 +1,20 @@
 # Market Status Automation
 
+## About
+
+This tool allows you to
+
+1. Create screenshots created from Playwright automation scripts that emulate an iPhone 13 environment on Safari.
+
+2. Send the screenshots over to a Discord webhook of your choice, like below
+
+<img src="assets/example_discord_embed.png" alt="Example Discord Embed" width="60%" height="60%">
+
 ## Setup
+
+### Prerequisites
+
+- node16 or higher
 
 ### Clone Repository
 
@@ -32,9 +46,9 @@ This should populate three screenshot files in your project root, like:
 └── usd-jpy.png
 ```
 
-You can also run `npx playwright --show-report` to see a detailed report of what was run.
+You can also run `npx playwright show-report` to see a detailed report of what was run.
 
-![Example Playwright Output](assets/example_spec.png)
+<img src="assets/example_spec.png" alt="Example Test Results" width="80%">
 
 ## Invoking Discord Webhook
 
@@ -57,28 +71,6 @@ npx ts-node src/app.ts
 ```
 
 If successful, your console should log `"Webhook delivered successfully"`.
-
-## Motivation
-
-This project was inspired by a daily interaction between friends of mine. For years, we took the time to screenshot the state of the market and share them with each other.
-
-Eventually, I stumbled upon the idea of Discord webhooks, and was able to invoke it with this tiny curl command snippet
-
-```bash
-# A script to send an image over to discord
-% curl -H 'Content-Type: multipart/form-data' \
-   -F 'payload_json={"username": "test", "content": "hello"}' \
-   -F "file1=@usd-jpy.png" \
-   $WEBHOOK_URL
-```
-
-That spawned this whole project where I
-
-- use Playwright to take screenshots of the state of the market for SPY, SPY Futures, and the USD JPY currency pair
-- store the resulting files locally
-- invoke src/app.ts to send a POST request to the discord webhook
-
-## Installation
 
 ### Project Structure
 
@@ -106,28 +98,44 @@ Contains metadata about the project, including its name, version, description, d
 #### playwright-report (Directory)
 
 Store generated reports or logs related to Playwright test execution as a result of running `npx playwright show-report`
-playwright.config.ts
 
-This TypeScript configuration file is used to define various settings and options for configuring Playwright's behavior during test execution. It may include settings such as browser type, test environment, test timeouts, and more.
-readme.md
+#### playwright.config.ts
 
-The README file typically provides an introduction to the project, setup instructions, usage guidelines, and any other essential information for developers, testers, or contributors. It's often the first thing people read when they explore the project.
-src (Directory)
+This TypeScript configuration file is used to define various settings and options for configuring Playwright's behavior during test execution. It includes settings such as browser type, test environment, test timeouts, and more.
 
-This directory may contain the source code for the application or tests being automated using Playwright. It might include the application's source files, scripts, utilities, or other relevant code.
-test-results (Directory)
+Please note that this project has only been configured to work with mobile screen sizes that fit an iPhone 12/13/14.
 
-This directory could be used to store the output of test runs, including reports, logs, screenshots, and other artifacts generated during test execution using Playwright.
-tests (Directory)
+#### readme.md
 
-The tests directory likely holds the actual test scripts written using Playwright's API. These scripts are responsible for automating interactions with the application under test and verifying its behavior.
+Hi
 
-### Usage and Workflow
+#### src (Directory)
 
-#### Configuration:
+Contains the entrypoint for the webhook invocation at `app.ts`. Also contains helper functions to be consumed by `app.ts` and the Playwright test suite.
 
-Modify the playwright.config.ts file to customize Playwright's settings according to your testing needs, such as browser type, environment setup, and timeouts.
+#### tests (Directory)
 
-#### Running Tests:
+Holds the actual test scripts written using Playwright's API. These scripts are responsible for emulating a browser environment on the device defined in `playwright.config.ts` in order to capture screenshots.
 
-Execute the tests using npm commands defined in the package.json file. For example, `npx playwright test`
+## Motivation
+
+This project was inspired by a daily interaction between friends of mine. For years, we took the time to screenshot the state of the market and share them with each other.
+
+Eventually, I stumbled upon the idea of Discord webhooks, and was able to invoke it with this tiny curl command snippet
+
+```bash
+# A script to send an image over to discord
+% curl -H 'Content-Type: multipart/form-data' \
+   -F 'payload_json={"username": "Beep-Bop", "content": "hello"}' \
+   -F "file1=@usd-jpy.png" \
+   $WEBHOOK_URL
+```
+
+That spawned this whole project.
+
+### References:
+
+- https://discord.com/developers/docs/resources/webhook
+- https://discord.com/safety/using-webhooks-and-embeds
+- https://playwright.dev/
+- https://playwright.dev/docs/api/class-playwright
