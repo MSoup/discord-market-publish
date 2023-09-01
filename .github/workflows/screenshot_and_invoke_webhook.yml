@@ -33,6 +33,7 @@ jobs:
           echo "Using the WEBHOOK_URL: $WEBHOOK_URL"
   invoke-webhook:
     runs-on: ubuntu-latest
+    needs: test
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
