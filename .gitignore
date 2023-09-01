@@ -1,0 +1,8 @@
+node_modules/
+/test-results/
+/playwright-report/
+/playwright/.cache/
+.env
+us-spx-500-futures.png
+us-spx-500.png
+usd-jpy.png
