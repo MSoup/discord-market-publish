@@ -19,24 +19,13 @@ jobs:
         run: npx playwright install --with-deps
       - name: Run Playwright tests
         run: npx playwright test
-      # - uses: actions/upload-artifact@v3
-      #   if: always()
-      #   with:
-      #     name: playwright-report
-      #     path: playwright-report/
-      #     retention-days: 30
-
-      - name: Use API Key
+      - uses: szenius/set-timezone@v1.2
+        with:
+          timezoneLinux: "Asia/Tokyo"
+      - name: Import WEBHOOK_URL
         env:
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
         run: |
-          echo "Using the WEBHOOK_URL: $WEBHOOK_URL"
-  invoke-webhook:
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - run: npx ts-node src/app.ts
+          touch .env && echo "WEBHOOK_URL=$WEBHOOK_URL" >> .env
+      - name: Invoke Webhook
+        run: npx ts-node src/app.ts

@@ -1,6 +1,65 @@
 # Market Status Automation
 
+## Setup
+
+### Clone Repository
+
+```bash
+git clone git@github.com:MSoup/discord-market-publish.git
+```
+
+### Install Dependencies From Project Root
+
+```bash
+npm ci
+```
+
+## Web Automation (Screenshotting Market Instruments)
+
+### Run Playwright to perform screenshot automation
+
+```bash
+npx playwright test
+```
+
+This should populate three screenshot files in your project root, like:
+
+```bash
+.
+...
+├── us-spx-500-futures.png
+├── us-spx-500.png
+└── usd-jpy.png
+```
+
+You can also run `npx playwright --show-report` to see a detailed report of what was run.
+
 ![Example Playwright Output](assets/example_spec.png)
+
+## Invoking Discord Webhook
+
+### Set Up Discord Webhook
+
+Follow the instructions [here](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks) up to the point where you copy the webhook url. It should be in the form of `https://discord.com/api/webhooks/{someLongHash}`
+
+### Export the Webhook to an env variable
+
+\*Make sure you replace the webhook URL with the actual one for your Discord channel. The `.env` file should be in your project root.
+
+```bash
+touch .env && echo WEBHOOK_URL="https://discord.com/api/webhooks/{someLongHash}"
+```
+
+### Invoke a POST request to your webhook
+
+```bash
+npx ts-node src/app.ts
+```
+
+If successful, your console should log `"Webhook delivered successfully"`.
+
+## Motivation
+
 This project was inspired by a daily interaction between friends of mine. For years, we took the time to screenshot the state of the market and share them with each other.
 
 Eventually, I stumbled upon the idea of Discord webhooks, and was able to invoke it with this tiny curl command snippet
@@ -20,28 +79,6 @@ That spawned this whole project where I
 - invoke src/app.ts to send a POST request to the discord webhook
 
 ## Installation
-
-### Install Dependencies
-
-```bash
-npm ci
-```
-
-### Run Playwright to perform screenshot automation
-
-```bash
-npx playwright test
-```
-
-This should populate three files in your project root, like:
-
-```bash
-.
-...
-├── us-spx-500-futures.png
-├── us-spx-500.png
-└── usd-jpy.png
-```
 
 ### Project Structure
 
