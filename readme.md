@@ -67,8 +67,16 @@ touch .env && echo WEBHOOK_URL="https://discord.com/api/webhooks/{someLongHash}"
 ### Invoke a POST request to your webhook
 
 ```bash
-npx ts-node src/app.ts
+npm run invoke-webhook MARKET_SYMBOL
 ```
+
+NOTE: `MARKET_SYMBOL` as of 9/5/2023 is one of: `'usd-jpy' | 'spy' | 'spy-futures'` as defined in `types.d.ts` here:
+
+```typescript
+type MarketSymbol = 'usd-jpy' | 'spy' | 'spy-futures';
+```
+
+`"invoke-webhook"` resolves to "npx ts-node src/app.ts"
 
 If successful, your console should log `"Webhook delivered successfully"`.
 

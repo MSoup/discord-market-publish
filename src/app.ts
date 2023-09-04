@@ -30,17 +30,17 @@ const marketStatus = isMarketOpen(new Date()) ? 'Market Open' : 'Market Closed';
 const metadata: Record<MarketSymbol, MarketMetadata> = {
   'usd-jpy': {
     title: `USD JPY - ${marketStatus}`,
-    description: `State of USD JPY - ${month}/${day}`,
+    description: `📅${month}/${day}`,
     filename: 'usd-jpy.png',
   },
   spy: {
     title: `S&P500 - ${marketStatus}`,
-    description: `State of S&P500 - ${month}/${day}`,
+    description: `📅${month}/${day}`,
     filename: 'us-spx-500.png',
   },
   'spy-futures': {
     title: `S&P Futures - ${marketStatus}`,
-    description: `State of S&P500 Futures - ${month}/${day}`,
+    description: `📅${month}/${day}`,
     filename: 'us-spx-500-futures.png',
   },
 };
