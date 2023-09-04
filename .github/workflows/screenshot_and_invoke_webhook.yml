@@ -1,9 +1,12 @@
 name: Playwright Tests
 on:
   push:
-    branches: [main, master]
-  pull_request:
-    branches: [main, master]
+    branches: [main]
+  schedule:
+    - cron: '30 8 * * 1,5'
+    - cron: '0 13 * * 1,5'
+    - cron: '45 13 * * 1,5'
+    - cron: '0 21 * * 1,5'
 jobs:
   test:
     timeout-minutes: 60
@@ -28,4 +31,7 @@ jobs:
         run: |
           touch .env && echo "WEBHOOK_URL=$WEBHOOK_URL" >> .env
       - name: Invoke Webhook
-        run: npx ts-node src/app.ts
+        run: |
+          npm run invoke-webhook usd-jpy
+          npm run invoke-webhook spy
+          npm run invoke-webhook spy-futures

@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint --fix . && prettier --write ."
+    "lint": "eslint --fix . && prettier --write .",
+    "invoke-webhook": "npx ts-node src/app.ts"
   },
   "keywords": [],
   "author": "",
