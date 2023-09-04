@@ -1,15 +1,22 @@
-import { test, expect } from "@playwright/test";
-import { getFilename } from "../src/test_utils";
-// Setup
+import { test } from '@playwright/test';
+
 class TestingEnvironment {
   static IPHONE_HEIGHT: number = 844;
+
   static IPHONE_WIDTH: number = 390;
 
   static URLS_TO_SCRAPE: string[] = [
-    "https://m.investing.com/indices/us-spx-500-futures-chart",
-    "https://m.investing.com/indices/us-spx-500-chart",
-    "https://m.investing.com/currencies/usd-jpy-chart",
+    'https://m.investing.com/indices/us-spx-500-futures-chart',
+    'https://m.investing.com/indices/us-spx-500-chart',
+    'https://m.investing.com/currencies/usd-jpy-chart',
   ];
+
+  static getFilename(URL: string): string {
+    const segmented = URL.split('/');
+    const endUrl = segmented[segmented.length - 1];
+    // usd-jpy-chart -> usd-jpy
+    return endUrl.slice(0, endUrl.indexOf('-chart'));
+  }
 }
 
 test.use({
@@ -21,26 +28,23 @@ test.use({
 
 // Parameterized tests
 for (const URL of TestingEnvironment.URLS_TO_SCRAPE) {
-  test(`Capturing ${URL}`, async ({ page }) => {
-    await page.goto(URL);
-    // Wait a time between 0-4 seconds in order to pretend to be human
-    await page.waitForTimeout(Math.random() * 2000);
-    // Remove ad
-    await page.getByRole("button", { name: "Not now" }).click();
+  const filename = TestingEnvironment.getFilename(URL);
 
-    // Remove Header from screenshot
-    const header = page.locator("#topHeader");
-    const bottomAd = page.locator("#div-gpt-ad-1333374405327-0");
-    const fullChartLink = page.getByRole("link", { name: "Full Chart »" });
+  test(`Capturing ${filename}`, async ({ page }) => {
+    await page.goto(URL);
+    // Remove ad
+    await page.getByRole('button', { name: 'Not now' }).click();
+
+    // Remove Header and bottom from screenshot
+    const header = page.locator('#topHeader');
+    const bottomAd = page.locator('#div-gpt-ad-1333374405327-0');
+    const fullChartLink = page.getByRole('link', { name: 'Full Chart »' });
 
     const headerBox = await header.boundingBox();
     const bottomAdBox = await bottomAd.boundingBox();
     const fullChartLinkBox = await fullChartLink.boundingBox();
 
-    const filename = getFilename(URL);
-
     if (headerBox && bottomAdBox && fullChartLinkBox) {
-      console.log(headerBox.height, bottomAdBox.height);
       await page.screenshot({
         path: `${filename}.png`,
         mask: [header, bottomAd],
@@ -56,7 +60,7 @@ for (const URL of TestingEnvironment.URLS_TO_SCRAPE) {
         },
       });
     } else {
-      throw new Error("Failed");
+      throw new Error('Failed');
     }
   });
 }

@@ -21,7 +21,7 @@ jobs:
         run: npx playwright test
       - uses: szenius/set-timezone@v1.2
         with:
-          timezoneLinux: "Asia/Tokyo"
+          timezoneLinux: 'Asia/Tokyo'
       - name: Import WEBHOOK_URL
         env:
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
