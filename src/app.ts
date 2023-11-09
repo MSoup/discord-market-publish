@@ -1,24 +1,25 @@
-import { isMarketOpen } from './utils';
+import { isMarketOpen, logError } from './utils';
 import dotenv from 'dotenv';
 import { invokeWebhook } from './invoke_webhook';
-import { MarketSymbol, MarketMetadata } from './types';
+import { MarketSymbol } from './types';
 
 dotenv.config();
 
 const WEBHOOK_URL = process.env.WEBHOOK_URL;
-const FETCH_DATA = process.argv[2];
+const TICKER: unknown = process.argv[2];
+const validTickers: MarketSymbol[] = ['usd-jpy', 'spy', 'spy-futures'];
 
 if (!WEBHOOK_URL) {
-  const invalidEnvError = new Error('Error: Check WEBHOOK_URL env variable');
-  console.error(invalidEnvError.message);
+  logError(new Error(`invalid webhook URL: ${WEBHOOK_URL}`));
   process.exit(1);
 }
-if (!FETCH_DATA) {
-  const invalidArgsError = new Error(
-    'Usage: npx ts-node src/app.js usd-jpy|spy|spy-futures'
+// If TICKER doesn't exist or it's not part of the valid ticker list, throw usage guide
+if (!(typeof TICKER === 'string' && validTickers.includes(TICKER))) {
+  logError(
+    new Error(
+      `Usage: npx ts-node src/app.js usd-jpy|spy|spy-futures - received ${TICKER}`
+    )
   );
-  console.error(invalidArgsError.message);
-  process.exit(1);
 }
 
 const date = new Date();
@@ -27,7 +28,10 @@ const month = date.getMonth() + 1;
 
 const marketStatus = isMarketOpen(new Date()) ? 'Market Open' : 'Market Closed';
 
-const metadata: Record<MarketSymbol, MarketMetadata> = {
+const metadata: Record<
+  MarketSymbol,
+  { title: string; description: string; filename: string }
+> = {
   'usd-jpy': {
     title: `USD JPY - ${marketStatus}`,
     description: `📅${month}/${day}`,
@@ -45,7 +49,7 @@ const metadata: Record<MarketSymbol, MarketMetadata> = {
   },
 };
 
-const marketSymbolMetaData = metadata[FETCH_DATA as MarketSymbol];
+const marketSymbolMetaData = metadata[TICKER as MarketSymbol];
 
-console.log('Invoking webhook for financial instrument:', FETCH_DATA);
+console.log('Invoking webhook for financial instrument:', TICKER);
 invokeWebhook(WEBHOOK_URL, marketSymbolMetaData);
