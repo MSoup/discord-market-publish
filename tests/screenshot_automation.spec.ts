@@ -14,7 +14,7 @@ class TestingEnvironment {
   static getFilename(URL: string): string {
     const segmented = URL.split('/');
     const endUrl = segmented[segmented.length - 1];
-    // usd-jpy-chart -> usd-jpy
+    // usd-jpy-chart would become usd-jpy
     return endUrl.slice(0, endUrl.indexOf('-chart'));
   }
 }
