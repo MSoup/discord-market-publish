@@ -6,8 +6,13 @@ import FormData from 'form-data';
 // if we do not explicitly import FormData from "form-data"
 
 import axios from 'axios';
-import { MarketMetadata } from './types';
 import { isMarketOpen } from './utils';
+
+type MarketMetadata = {
+  title: string;
+  description: string;
+  filename: string;
+};
 
 export const invokeWebhook = async (
   URL: string,

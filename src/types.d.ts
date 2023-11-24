@@ -1,1 +1,1 @@
-type MarketSymbol = 'usd-jpy' | 'spy' | 'spy-futures';
+export type MarketSymbol = 'usd-jpy' | 'spy' | 'spy-futures';
